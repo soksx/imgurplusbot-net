@@ -38,4 +38,3 @@ namespace imgurplusbot.bll.Services
         }
     }
 }
-
