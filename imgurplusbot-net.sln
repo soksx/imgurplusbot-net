@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "imgurplusbot.api", "imgurpl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "imgurplusbot.bll", "imgurplusbot.bll\imgurplusbot.bll.csproj", "{EE9A1780-805A-4C56-A337-4DA35DFC2549}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "imgurplusbot.dal", "imgurplus.dal\imgurplusbot.dal.csproj", "{B72D63E5-1A7A-4055-8BBA-5B740B9C9BB2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "imgurplusbot.dal", "imgurplusbot.dal\imgurplusbot.dal.csproj", "{B72D63E5-1A7A-4055-8BBA-5B740B9C9BB2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
