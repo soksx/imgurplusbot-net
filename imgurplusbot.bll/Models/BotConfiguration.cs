@@ -7,6 +7,8 @@ namespace imgurplusbot.bll.Models
 
         public string Socks5Host { get; set; }
 
-        public int Socks5Port { get; set; }
+        public int? Socks5Port { get; set; }
+        public string ImgurClientId { get; set; }
+        public string ImgurApiKey{ get; set; }
     }
 }

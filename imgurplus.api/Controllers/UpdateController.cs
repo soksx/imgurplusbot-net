@@ -1,15 +1,17 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using imgurplusbot.bll.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Telegram.Bot.Types;
-using imgurplusbot.bll.Interfaces;
 
-namespace imgurplusbot.api.Controllers
+namespace imgurplus.api.Controllers
 {
     [Route("api/[controller]")]
     public class UpdateController : Controller
     {
         private readonly IUpdateService _updateService;
-
         public UpdateController(IUpdateService updateService)
         {
             _updateService = updateService;
@@ -22,5 +24,10 @@ namespace imgurplusbot.api.Controllers
             await _updateService.ProcessRequest(update);
             return Ok();
         }
+
+        // GET api/update
+        [HttpGet]
+        public string Get() => "ping";
+
     }
 }

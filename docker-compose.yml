@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  imgurplus.api:
+    image: ${DOCKER_REGISTRY-}imgurplusapi
+    build:
+      context: .
+      dockerfile: imgurplus.api/Dockerfile
+    ports:
+      - "8080:80"

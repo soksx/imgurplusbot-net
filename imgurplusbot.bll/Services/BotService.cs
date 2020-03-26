@@ -13,13 +13,12 @@ namespace imgurplusbot.bll.Services
         public BotService(IOptions<BotConfiguration> config)
         {
             _config = config.Value;
-            Client = string.IsNullOrEmpty(_config.Socks5Host)
+            Client = string.IsNullOrEmpty(_config.Socks5Host) && !_config.Socks5Port.HasValue
                 ? new TelegramBotClient(_config.BotToken)
                 : new TelegramBotClient(
                     _config.BotToken,
-                    new HttpToSocks5Proxy(_config.Socks5Host, _config.Socks5Port));
+                    new HttpToSocks5Proxy(_config.Socks5Host, _config.Socks5Port.Value));
         }
-
         public TelegramBotClient Client { get; }
     }
 }
