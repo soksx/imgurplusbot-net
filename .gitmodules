@@ -1,0 +1,3 @@
+[submodule "Imgur.API"]
+	path = Imgur.API
+	url = https://github.com/soksx/Imgur.API.git
