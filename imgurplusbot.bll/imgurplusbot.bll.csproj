@@ -11,4 +11,7 @@
     <PackageReference Include="Telegram.Bot" Version="15.4.0" />
     <PackageReference Include="HttpToSocks5Proxy" Version="1.4.0" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Imgur.API\src\Imgur.API\Imgur.API.csproj" />
+  </ItemGroup>
 </Project>

@@ -1,5 +1,4 @@
-﻿using Imgur.API.Authentication.Impl;
-using Imgur.API.Endpoints.Impl;
+﻿using Imgur.API.Endpoints;
 using System;
 using System.Collections.Generic;
 using System.Text;

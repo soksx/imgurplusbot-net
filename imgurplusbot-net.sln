@@ -10,6 +10,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "imgurplus.api", "imgurplus.
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{DC4774FC-AC05-478F-B86C-E052F058BAB7}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imgur.API", "Imgur.API\src\Imgur.API\Imgur.API.csproj", "{A95B54BB-16D7-4A43-9245-04546781C384}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{DC4774FC-AC05-478F-B86C-E052F058BAB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC4774FC-AC05-478F-B86C-E052F058BAB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC4774FC-AC05-478F-B86C-E052F058BAB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A95B54BB-16D7-4A43-9245-04546781C384}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A95B54BB-16D7-4A43-9245-04546781C384}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A95B54BB-16D7-4A43-9245-04546781C384}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A95B54BB-16D7-4A43-9245-04546781C384}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

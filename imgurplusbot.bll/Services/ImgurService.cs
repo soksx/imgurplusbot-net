@@ -1,5 +1,5 @@
-﻿using Imgur.API.Authentication.Impl;
-using Imgur.API.Endpoints.Impl;
+﻿using Imgur.API.Authentication;
+using Imgur.API.Endpoints;
 using imgurplusbot.bll.Interfaces;
 using imgurplusbot.bll.Models;
 using Microsoft.Extensions.Options;

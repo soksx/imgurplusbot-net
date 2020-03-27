@@ -12,6 +12,7 @@ using imgurplusbot.bll.Models;
 using Newtonsoft.Json;
 using static imgurplusbot.bll.Helpers.Extensions.EnumExtensions;
 using imgurplusbot.bll.Enums;
+using IMG = Imgur.API.Enums;
 
 namespace imgurplusbot.bll.Services
 {
@@ -120,48 +121,51 @@ namespace imgurplusbot.bll.Services
             long chatId = message.Chat.Id;
             int messageId = message.MessageId;
             string fileId = null;
-
+            IMG.FileType? fileType = null;
 
             if (message.Type == MessageType.Photo)
+            {
                 fileId = message.Photo.Last().FileId;
+                fileType = IMG.FileType.Image;
+            }
             if (message.Type == MessageType.Document && message.Document.MimeType == "video/mp4") /* GIF */
+            {
                 fileId = message.Document.FileId;
+                fileType = IMG.FileType.Video;
+            }
 
-            if (string.IsNullOrEmpty(fileId))
+            if (string.IsNullOrEmpty(fileId) || !fileType.HasValue)
             {
                 await SendMessage(message.Chat.Id, "Can you send an Image?");
                 return;
             }
             /* Handle File size */
-            await UploadImage(chatId, messageId, fileId);
+            await UploadImage(chatId, messageId, fileId, fileType.Value);
         }
         private async Task SendMessage(long chatId, string messageText)
         {
             await _botService.Client.SendTextMessageAsync(chatId, messageText);
         }
-        private async Task UploadImage(long chatId, int messageId, string fileId)
+        private async Task UploadImage(long chatId, int messageId, string fileId, IMG.FileType fileType)
         {
             Message reepplyMessage = await _botService.Client.SendTextMessageAsync(chatId, "We are uploading your photo!", ParseMode.Default, false, false, messageId);
-            byte[] fileContent = null;
-            File imageFile = null;
+
+            IImage imageUploaded = null;
+
             using (IO.MemoryStream fileStream = new IO.MemoryStream())
             {
-                imageFile = await _botService.Client.GetInfoAndDownloadFileAsync(fileId, fileStream);
-                fileContent = fileStream.ToArray();
-            }
-            IImage imageUploaded = null;
-            if (fileContent != null)
-            {
+                File imageFile = await _botService.Client.GetInfoAndDownloadFileAsync(fileId, fileStream);
                 try
                 {
-                    imageUploaded = await _imgurService.ImageEndpoint.UploadImageBinaryAsync(fileContent, null, $"{imageFile.FileId} Upload by @imgurplusbot");
+                    fileStream.Position = 0;
+                    imageUploaded = await _imgurService.ImageEndpoint.UploadFileAsync(fileStream, imageFile.FilePath.Split('/').Last(), fileType, null, $"{imageFile.FileId} Upload by @imgurplusbot");
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError("Exception throwed in UploadImage: {0} \n", ex.Message, ex.StackTrace);
                 }
             }
-
+            
             InlineKeyboardMarkup inlineKeyboardMarkup = null;
             if (imageUploaded != null)
             {
@@ -181,7 +185,7 @@ namespace imgurplusbot.bll.Services
 
                 );
             }
-            await _botService.Client.EditMessageTextAsync(chatId, reepplyMessage.MessageId, $"<pre>{imageUploaded?.Link ?? "Something is wrong! Try again later"}</pre>", ParseMode.Html, true, inlineKeyboardMarkup);
+            await _botService.Client.EditMessageTextAsync(chatId, reepplyMessage.MessageId, imageUploaded?.Link ?? "<pre>Something is wrong! Try again later</pre>", ParseMode.Html, true, inlineKeyboardMarkup);
         }
         private async Task GenerateRotateLinks(ICallbackData callbackData, Message message)
         {
@@ -201,7 +205,7 @@ namespace imgurplusbot.bll.Services
             inlineKeyboardMarkup.InlineKeyboard.First().First().CallbackData = new CallbackData(CallbackAction.ChangeUrl).AddData("urlType", nextLinkType.ToString()).ToString();
             inlineKeyboardMarkup.InlineKeyboard.First().First().Text = nextLinkType.ToString();
             /* Edit message */
-            await _botService.Client.EditMessageTextAsync(message.Chat.Id, message.MessageId, string.Format(msgFormat, string.Format(urlFormat, imgUrl)), (linkType == LinkRotateType.HTML) ? ParseMode.MarkdownV2 : ParseMode.Html, true, inlineKeyboardMarkup);
+            await _botService.Client.EditMessageTextAsync(message.Chat.Id, message.MessageId, string.Format(linkType == LinkRotateType.TEXT ? "{0}" : msgFormat, string.Format(urlFormat, imgUrl)), (linkType == LinkRotateType.HTML) ? ParseMode.MarkdownV2 : ParseMode.Html, true, inlineKeyboardMarkup);
         }
         #endregion
 
