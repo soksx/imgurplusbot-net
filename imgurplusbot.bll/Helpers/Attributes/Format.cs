@@ -4,10 +4,11 @@ using System.Text;
 
 namespace imgurplusbot.bll.Helpers.Attributes
 {
-    public class FormatAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Field)]
+    public class Format : Attribute
     {
         public string Value { get; }
-        public FormatAttribute(string value)
+        public Format(string value)
         {
             this.Value = value;
         }

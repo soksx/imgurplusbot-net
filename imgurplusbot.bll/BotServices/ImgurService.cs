@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace imgurplusbot.bll.Services
+namespace imgurplusbot.bll.BotServices
 {
     public class ImgurService : IImgurService
     {

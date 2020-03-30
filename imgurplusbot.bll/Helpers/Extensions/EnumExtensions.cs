@@ -24,7 +24,7 @@ namespace imgurplusbot.bll.Helpers.Extensions
                 .GetMember(src.ToString())
                 .Where(member => member.MemberType == MemberTypes.Field)
                 .FirstOrDefault()
-                .GetCustomAttributes<FormatAttribute>(false)
+                .GetCustomAttributes<Format>(false)
                 .SingleOrDefault()?.Value;
         }
     }

@@ -1,12 +1,12 @@
-﻿using imgurplusbot.bll.Enums;
-using imgurplusbot.bll.Models;
+﻿using System;
 using System.Collections.Generic;
 
 namespace imgurplusbot.bll.Interfaces
 {
     public interface ICallbackData
     {
-        CallbackAction Action { get; }
+        string Handler { get; }
         Dictionary<string, string> Data { get; }
+        T GetAction<T>() where T : Enum;
     }
 }

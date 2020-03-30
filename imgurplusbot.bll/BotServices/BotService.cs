@@ -5,7 +5,7 @@ using imgurplusbot.bll.Models;
 using imgurplusbot.bll.Interfaces;
 using Microsoft.Extensions.Options;
 
-namespace imgurplusbot.bll.Services
+namespace imgurplusbot.bll.BotServices
 {
     public class BotService : IBotService
     {
