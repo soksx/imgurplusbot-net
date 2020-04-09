@@ -7,7 +7,7 @@ using Telegram.Bot.Types;
 
 namespace imgurplusbot.bll.BotHandlers
 {
-    public class CommandHandler : BaseHandler, IBotHandler
+    public class CommandHandler : BaseHandler
     {
         public CommandHandler(IBotService botService) : base(botService) { }
         public override Task ProcessCallback(ICallbackData callback, Message message)

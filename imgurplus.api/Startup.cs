@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using imgurplusbot.bll.Interfaces;
 using imgurplusbot.bll.Models;
 using imgurplusbot.bll.BotServices;
+using imgurplusbot.dal.EF;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;

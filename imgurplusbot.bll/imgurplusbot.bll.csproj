@@ -8,10 +8,11 @@
     <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.3" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.3" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Telegram.Bot" Version="15.4.0" />
+    <PackageReference Include="Telegram.Bot" Version="15.5.1" />
     <PackageReference Include="HttpToSocks5Proxy" Version="1.4.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Imgur.API\src\Imgur.API\Imgur.API.csproj" />
+    <ProjectReference Include="..\imgurplusbot.dal\imgurplusbot.dal.csproj" />
   </ItemGroup>
 </Project>

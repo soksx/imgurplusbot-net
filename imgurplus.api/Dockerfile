@@ -8,6 +8,7 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["imgurplus.api/imgurplus.api.csproj", "imgurplus.api/"]
 COPY ["imgurplusbot.bll/imgurplusbot.bll.csproj", "imgurplusbot.bll/"]
+COPY ["imgurplusbot.dal/imgurplusbot.dal.csproj", "imgurplusbot.dal/"]
 COPY ["Imgur.API/src/Imgur.API/Imgur.API.csproj", "Imgur.API/src/Imgur.API/"]
 RUN dotnet restore "imgurplus.api/imgurplus.api.csproj"
 COPY . .

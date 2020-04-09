@@ -4,12 +4,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using imgurplusbot.bll.Interfaces;
-using imgurplusbot.bll.Models;
 using static imgurplusbot.bll.Helpers.Extensions.ClassExtensions;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using imgurplusbot.bll.Helpers.Attributes;
 using Telegram.Bot.Types.Enums;
+using imgurplusbot.dal.EF;
 
 namespace imgurplusbot.bll.BotHandlers
 {
@@ -29,6 +29,7 @@ namespace imgurplusbot.bll.BotHandlers
         #region Shared properties
         public TelegramBotClient Bot => _tgBot;
         public ILogger Log => _logger;
+        public ImgurPlusContext DatabaseContext => new ImgurPlusContext();
         public string HandlerName
         {
             get

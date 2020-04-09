@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using IO = System.IO;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using imgurplusbot.bll.Interfaces;
 using Telegram.Bot.Types;
@@ -15,11 +14,13 @@ using imgurplusbot.bll.Enums;
 using Microsoft.Extensions.Logging;
 using imgurplusbot.bll.Helpers.Extensions;
 using imgurplusbot.bll.Helpers.Attributes;
+using ImgurModels = imgurplusbot.dal.Models;
+using imgurplusbot.dal.Helpers;
 
 namespace imgurplusbot.bll.BotHandlers
 {
     [Handler(TGENUMS.MessageType.Document, TGENUMS.MessageType.Photo, Name = "ImageHandler")]
-    public class ImageHandler : BaseHandler, IBotHandler
+    public class ImageHandler : BaseHandler
     {
         private readonly IImgurService _imgurService;
         #region Constructors
@@ -35,6 +36,10 @@ namespace imgurplusbot.bll.BotHandlers
         #region Internal Methods
         internal async Task ProcessUpload(Message message)
         {
+            ImgurModels.User ImgurUser = Utils.GetUser((usr) => usr.TgId == message.From.Id);
+            if (ImgurUser == null)
+                ImgurUser = Utils.AddUser(message.From.ToImgUser());
+
             long chatId = message.Chat.Id;
             int messageId = message.MessageId;
             string fileId = null;
@@ -69,7 +74,7 @@ namespace imgurplusbot.bll.BotHandlers
             }
 
             /* Handle File size */
-            await UploadImage(chatId, messageId, tgFile, fileType);
+            await UploadImage(ImgurUser.Id, chatId, messageId, tgFile, fileType);
         }
         internal async Task ProcessAction(ICallbackData callback, Message message)
         {
@@ -79,8 +84,7 @@ namespace imgurplusbot.bll.BotHandlers
                     await GenerateRotateLinks(callback, message);
                     break;
                 case CallbackImageAction.DeleteImage:
-                    await _imgurService.ImageEndpoint.DeleteImageAsync(callback.Data["deleteHash"]);
-                    await Bot.DeleteMessageAsync(message.Chat.Id, message.MessageId);
+                    await DeleteImage(callback.Data["deleteHash"], message.Chat.Id, message.MessageId);
                     break;
                 default:
                     break;
@@ -88,7 +92,7 @@ namespace imgurplusbot.bll.BotHandlers
         }
         #endregion
         #region Private Methods
-        private async Task UploadImage(long chatId, int messageId, File tgFile, IMG.FileType fileType)
+        private async Task UploadImage(long imgUserId, long chatId, int messageId, File tgFile, IMG.FileType fileType)
         {
             Message reepplyMessage = await Bot.SendTextMessageAsync(chatId, "We are uploading your photo!", TGENUMS.ParseMode.Default, false, false, messageId);
 
@@ -126,7 +130,14 @@ namespace imgurplusbot.bll.BotHandlers
                     }
                 );
             }
+            Utils.AddUserUpload(new ImgurModels.UserUpload { UserId = imgUserId, TgFileId = tgFile.FileId, UploadDate = DateTimeOffset.Now, ImgurLink = imageUploaded?.Link, ImgurDeleteHash = imageUploaded?.DeleteHash });
             await Bot.EditMessageTextAsync(chatId, reepplyMessage.MessageId, imageUploaded?.Link ?? "<pre>Something is wrong! Try again later</pre>", TGENUMS.ParseMode.Html, true, inlineKeyboardMarkup);
+        }
+        private async Task DeleteImage(string deleteHash, ChatId chatId, int messageId)
+        {
+            Utils.DeteleUserUpload((usrUpload) => usrUpload.ImgurDeleteHash == deleteHash);
+            await _imgurService.ImageEndpoint.DeleteImageAsync(deleteHash);
+            await Bot.DeleteMessageAsync(chatId, messageId);
         }
         private async Task GenerateRotateLinks(ICallbackData callbackData, Message message)
         {
