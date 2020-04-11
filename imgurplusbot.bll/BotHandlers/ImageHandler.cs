@@ -39,9 +39,7 @@ namespace imgurplusbot.bll.BotHandlers
         #region Internal Methods
         private async Task ProcessUpload(Message message)
         {
-            ImgurModels.User ImgurUser = Utils.GetUser((usr) => usr.TgId == message.From.Id);
-            if (ImgurUser == null)
-                ImgurUser = Utils.AddUser(message.From.ToImgUser());
+            ImgurModels.User ImgurUser = Utils.AddOrGetUser(message.From);
 
             long chatId = message.Chat.Id;
             int messageId = message.MessageId;
@@ -52,11 +50,11 @@ namespace imgurplusbot.bll.BotHandlers
             {
                 fileId = message.Photo.Last().FileId;
             }
-            else if (message.Type == TGENUMS.MessageType.Document && Util.IsMimeTypeImage(message.Document.MimeType)) /* Image send as doc */
+            else if (message.Type == TGENUMS.MessageType.Document && Utils.IsMimeTypeImage(message.Document.MimeType)) /* Image send as doc */
             {
                 fileId = message.Document.FileId;
             }
-            else if (message.Type == TGENUMS.MessageType.Document && Util.IsMimeTypeVideo(message.Document.MimeType)) /* GIF or Video */
+            else if (message.Type == TGENUMS.MessageType.Document && Utils.IsMimeTypeVideo(message.Document.MimeType)) /* GIF or Video */
             {
                 fileId = message.Document.FileId;
                 fileType = IMG.FileType.Video;
@@ -70,7 +68,7 @@ namespace imgurplusbot.bll.BotHandlers
 
             File tgFile = await Bot.GetFileAsync(fileId);
 
-            if (Util.FileSizeReached(tgFile.FileSize, fileType, out string maxFileSize))
+            if (Utils.FileSizeReached(tgFile.FileSize, fileType, out string maxFileSize))
             {
                 await SendMessage(message.Chat.Id, $"Maximum file size reached! Max filesize for {fileType}: {maxFileSize}");
                 return;
@@ -145,7 +143,7 @@ namespace imgurplusbot.bll.BotHandlers
                         });
                 inlineKeyboardMarkup = new InlineKeyboardMarkup(inlineKeyboardButtons);
             }
-            Utils.AddUserUpload(new ImgurModels.UserUpload { UserId = imgUserId, TgFileId = tgFile.FileId, UploadDate = DateTimeOffset.Now, ImgurLink = imageUploaded?.Link, ImgurDeleteHash = imageUploaded?.DeleteHash });
+            DbUtils.AddUserUpload(new ImgurModels.UserUpload { UserId = imgUserId, TgFileId = tgFile.FileId, UploadDate = DateTimeOffset.Now, ImgurLink = imageUploaded?.Link, ImgurDeleteHash = imageUploaded?.DeleteHash });
             await Bot.EditMessageTextAsync(chatId, reepplyMessage.MessageId, imageUploaded?.Link ?? "<pre>Something is wrong! Try again later</pre>", TGENUMS.ParseMode.Html, true, inlineKeyboardMarkup);
         }
         private async Task DeleteImage(ICallbackData callback, Message message, string callbackQueryId)
@@ -175,7 +173,7 @@ namespace imgurplusbot.bll.BotHandlers
         private async Task DeleteImageInternal(string deleteHash, ChatId chatId, int messageId, bool bypassDb = false)
         {
             if (!bypassDb)
-                Utils.DeteleUserUpload((usrUpload) => usrUpload.ImgurDeleteHash == deleteHash);
+                DbUtils.DeteleUserUpload((usrUpload) => usrUpload.ImgurDeleteHash == deleteHash);
             await _imgurService.ImageEndpoint.DeleteImageAsync(deleteHash);
             await Bot.DeleteMessageAsync(chatId, messageId);
         }
@@ -189,7 +187,7 @@ namespace imgurplusbot.bll.BotHandlers
             /* Parse as enum urlType from callbackData */
             LinkRotateType linkType = (LinkRotateType)Enum.Parse(typeof(LinkRotateType), callbackData.Data["urlType"]);
             /* Call function to generate url and parse mode */
-            var (messageUrl, parseMode) = Util.GenerateMessageAndFormatByLinkType(linkType, imgUrl);
+            var (messageUrl, parseMode) = Utils.GenerateMessageAndFormatByLinkType(linkType, imgUrl);
             /* Declare next Link type */
             LinkRotateType nextLinkType = linkType.Next();
             /* Asign Property to proerty of change link type button */
@@ -247,7 +245,7 @@ namespace imgurplusbot.bll.BotHandlers
             inlineKeyboardMarkup.InlineKeyboard.FirstOrDefault((kbRows) => kbRows.Any(opnLinkSearch)).FirstOrDefault(opnLinkSearch).Url = newLink;
             /* Get Parse Mode And Link */
             LinkRotateType linkType = (LinkRotateType)Enum.Parse(typeof(LinkRotateType), ((CallbackData)inlineKeyboardMarkup.InlineKeyboard.First().First().CallbackData).Data["urlType"]);
-            var (messageUrl, parseMode) = Util.GenerateMessageAndFormatByLinkType(linkType.Prev(), newLink);
+            var (messageUrl, parseMode) = Utils.GenerateMessageAndFormatByLinkType(linkType.Prev(), newLink);
             /* Edit Message */
             await Bot.EditMessageTextAsync(chatId, messageId, messageUrl, parseMode, true, inlineKeyboardMarkup);
         }

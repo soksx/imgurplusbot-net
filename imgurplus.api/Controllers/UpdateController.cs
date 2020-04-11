@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using imgurplusbot.bll.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,14 @@ namespace imgurplus.api.Controllers
 
         // GET api/update
         [HttpGet]
-        public string Get() => "ping";
+        public Task<string> Get() 
+        {
+            return Task<string>.Factory.StartNew(() => 
+            {
+                Thread.Sleep(5000);
+                return "ping";
+            });
+        }
 
     }
 }

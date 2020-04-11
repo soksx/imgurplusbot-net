@@ -1,17 +1,17 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Text;
-using imgurplusbot.bll.Enums;
-using Telegram.Bot.Types.Enums;
-using IMG = Imgur.API.Enums;
-using static imgurplusbot.bll.Helpers.Extensions.EnumExtensions;
-using System.Threading.Tasks;
 using System.Reflection;
+using System.Collections.Generic;
+using IMG = Imgur.API.Enums;
+using imgurplusbot.bll.Enums;
+using imgurplusbot.bll.Helpers.Extensions;
+using imgurplusbot.dal.Helpers;
+using ImgurModels = imgurplusbot.dal.Models;
+using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types;
 
 namespace imgurplusbot.bll.Helpers
 {
-    public static class Util
+    public static class Utils
     {
         public static (string, ParseMode) GenerateMessageAndFormatByLinkType(LinkRotateType linkRotateType, string msgLink)
         {
@@ -41,5 +41,6 @@ namespace imgurplusbot.bll.Helpers
                 }
             }
         }
+        public static ImgurModels.User AddOrGetUser(User tgUser) => DbUtils.GetUser((usr) => usr.TgId == tgUser.Id) ?? DbUtils.AddUser(tgUser.ToImgUser());
     }
 }

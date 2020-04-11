@@ -71,10 +71,7 @@ namespace imgurplusbot.bll.BotServices
             ICallbackData callbackData = (CallbackData)(callback.Data);
             await Task.WhenAll(ClassLoader<IBotHandler>.Instance[callbackData.Handler].Select((handler) => handler.ProcessCallback(callbackData, callback.Message, callback.Id)));
         }
-        private async Task ProcessMessage(Message message)
-        {
-            await Task.WhenAll(ClassLoader<IBotHandler>.Instance[message.Type].Select((handler) => handler.ProcessMessage(message)));
-        }
+        private async Task ProcessMessage(Message message) => await Task.WhenAll(ClassLoader<IBotHandler>.Instance[message.Type].Select((handler) => handler.ProcessMessage(message)));
         #endregion
 
     }

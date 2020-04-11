@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using imgurplusbot.bll.Interfaces;
-using static imgurplusbot.bll.Helpers.Extensions.ClassExtensions;
+using static imgurplusbot.bll.Helpers.Extensions.AttributeExtensions;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using imgurplusbot.bll.Helpers.Attributes;

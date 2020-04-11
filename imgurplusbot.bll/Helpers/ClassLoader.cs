@@ -41,12 +41,12 @@ namespace imgurplusbot.bll.Helpers
                 _parameters = classParams;
         }
         #endregion
-        #region Internal Methods
-        internal static void LoadHandlerClass()
+        #region Private Methods
+        private static void LoadHandlerClass()
         {
             if (_parameters == null)
                 throw new NullReferenceException($"{nameof(_parameters)} is not fullified. Cannot instance any class without parameters");
-            Parallel.ForEach(Util.GetTypesWithHelpAttribute<Type>(Assembly.GetExecutingAssembly(), typeof(Handler)), (loaded) =>
+            Parallel.ForEach(Utils.GetTypesWithHelpAttribute<Type>(Assembly.GetExecutingAssembly(), typeof(Handler)), (loaded) =>
             {
                 object[] matchParameters = _parameters.Where((pa) => loaded.GetConstructors()[0].GetParameters().Any((conspa) => conspa.ParameterType.IsAssignableFrom(pa.GetType()))).ToArray();
                 IBaseHandler handler = (IBaseHandler)loaded.GetConstructors()[0].Invoke(matchParameters);

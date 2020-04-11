@@ -6,7 +6,7 @@ using imgurplusbot.dal.Models;
 
 namespace imgurplusbot.dal.Helpers
 {
-    public static class Utils
+    public static class DbUtils
     {
         public static User AddUser(User user)
         {
