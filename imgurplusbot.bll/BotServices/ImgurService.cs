@@ -18,12 +18,13 @@ namespace imgurplusbot.bll.BotServices
             _ImgurClient = new ImgurClient(_config.ImgurClientId, _config.ImgurApiKey);
             ImageEndpoint = new ImageEndpoint(_ImgurClient);
             RateLimitEndpoint = new RateLimitEndpoint(_ImgurClient);
+            VidToGIFEndpoint = new VidToGIFEndpoint(new VidToGIFClient(_config.ImgurClientId, _config.ImgurApiKey));
         }
 
         private ImgurClient _ImgurClient { get; }
 
         public ImageEndpoint ImageEndpoint { get; }
-
+        public VidToGIFEndpoint VidToGIFEndpoint { get; }
         public RateLimitEndpoint RateLimitEndpoint { get; }
     }
 }

@@ -7,6 +7,8 @@ namespace imgurplusbot.bll.Enums
     public enum CallbackImageAction
     {
         ChangeUrl,
-        DeleteImage
+        Delete,
+        ConvertToMP4,
+        ConvertToGIF
     }
 }

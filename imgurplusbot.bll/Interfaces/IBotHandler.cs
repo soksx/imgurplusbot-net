@@ -7,6 +7,6 @@ namespace imgurplusbot.bll.Interfaces
     public interface IBotHandler
     {
         abstract Task ProcessMessage(Message message);
-        abstract Task ProcessCallback(ICallbackData callback, Message message);
+        abstract Task ProcessCallback(ICallbackData callback, Message message, string callbackQueryId);
     }
 }

@@ -9,5 +9,6 @@ namespace imgurplusbot.bll.Interfaces
     {
         ImageEndpoint ImageEndpoint { get; }
         RateLimitEndpoint RateLimitEndpoint { get; }
+        VidToGIFEndpoint VidToGIFEndpoint { get; }
     }
 }

@@ -24,7 +24,7 @@ namespace imgurplusbot.bll.BotHandlers
         }
         #region Abstract Methods
         public abstract Task ProcessMessage(Message message);
-        public abstract Task ProcessCallback(ICallbackData callback, Message message);
+        public abstract Task ProcessCallback(ICallbackData callback, Message message, string callbackQueryId);
         #endregion
         #region Shared properties
         public TelegramBotClient Bot => _tgBot;

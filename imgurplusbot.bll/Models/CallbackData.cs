@@ -50,13 +50,17 @@ namespace imgurplusbot.bll.Models
         {
             if (string.IsNullOrWhiteSpace(cast) || string.IsNullOrEmpty(cast))
                 throw new ArgumentNullException(nameof(cast));
-            if (!new Regex(@"\(\w+\)\{\d+\}\[(\'\w+\'\:\'\w+\'\;?)+\]").IsMatch(cast))
+            if (!new Regex(@"\(\w+\)\{\d+\}\[(\'\w+\'\:\'.+\'\;?)+\]").IsMatch(cast))
                 throw new InvalidCastException("Cannot parse input string correct format: (Handler){1}['aa':'bb';'cc':'dd']");
             Regex handlerRegex = new Regex(@"\(\w+\)");
             Regex actionRegex = new Regex(@"\{\d+\}");
-            Regex dataRegex = new Regex(@"\'\w+\'\:\'\w+\'");
+            Regex dataRegex = new Regex(@"\'\w+\'\:\'.+\'");
             CallbackData returnData = new CallbackData(handlerRegex.Match(cast).Value.RemoveCharXCharStr("()"), int.Parse(actionRegex.Match(cast).Value.RemoveCharXCharStr("{}")));
-            returnData.AddDataRange(dataRegex.Matches(cast).Select((el) => (el.Value.RemoveCharXCharStr("'").Split(":")[0], el.Value.RemoveCharXCharStr("'").Split(":")[1])));
+            returnData.AddDataRange(dataRegex.Matches(cast).SelectMany((multiple) => multiple.Value.Split(";")).Select((el) => 
+            {
+                string[] spl = el.Split("':'");
+                return (spl[0].RemoveCharXCharStr("'"), spl[1].RemoveCharXCharStr("'"));
+            }));
             return returnData;
         }
         public T GetAction<T>() where T : Enum
