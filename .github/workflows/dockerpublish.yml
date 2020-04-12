@@ -24,9 +24,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@master
         with:
-          submodules: true
+          submodules: recursive
       - name: Run tests
         run: |
           if [ -f docker-compose.yml ]; then
