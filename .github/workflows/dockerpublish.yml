@@ -46,7 +46,9 @@ jobs:
     if: github.event_name == 'push'
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@master
+        with:
+          submodules: recursive
 
       - name: Build image
         run: docker build . --file imgurplus.api/Dockerfile --tag image
