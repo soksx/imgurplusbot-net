@@ -21,4 +21,5 @@ RUN dotnet publish "imgurplus.api.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+RUN touch imgurplus.db
 ENTRYPOINT ["dotnet", "imgurplus.api.dll"]
